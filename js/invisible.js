@@ -39,12 +39,16 @@ var Invisible = {
             Invisible.Screen.content[y] = line;
         },
         draw: function(sprite, x, y) {
+            // draw checks for every line if it must be displayed
+            // and checks for every character if it must be displayed
             $.each(sprite, function(i, line) {
-                $.each(line.split(''), function(j, char) {
-                    if (char != " ") {
-                        Invisible.Screen.pixel(char, x + j, y + i);
-                    }
-                });
+                if (i + y < Invisible.Screen.height - 1 && i + y > 0) {
+                    $.each(line.split(''), function(j, char) {
+                        if (char != " " && j + x < Invisible.Screen.width - 1 && j + x > 0) {
+                            Invisible.Screen.pixel(char, x + j, y + i);
+                        }
+                    });
+                }
             });
         },
         display: function() {
