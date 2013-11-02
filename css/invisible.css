@@ -1,0 +1,8 @@
+
+
+#screen {
+    border: 1px solid black;
+    font-family: "Courier New", Courier, monospace;
+    background-color: rgb(42, 71, 103);
+    color: white;
+}
