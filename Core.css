@@ -1,13 +1,25 @@
-
+body {
+    margin: 0;
+}
 
 #screen {
-    border: 1px solid black;
     font-family: "Courier New", Courier, monospace;
     font-size: 1em;
     background-color: rgb(42, 71, 103);
     color: white;
+    position: absolute;
+}
+
+#screen>pre {
+    border: 1px solid black;
 }
 
 .sprites {
+    position: absolute;
     background-color: rgb(42, 71, 103);
+}
+
+.sprites pre {
+    margin: 0;
+    padding: 0;
 }

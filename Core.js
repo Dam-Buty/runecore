@@ -53,11 +53,15 @@ var Core = {
     screen: {
         sel: $("#screen"),
         pre: $("#screen pre"),
-        width: function() {
-            return this.pre.innerWidth();
-        },
-        height: function() {
-            return this.pre.innerHeight();
+        width: function() { return this.pre.innerWidth(); },
+        height: function() { return this.pre.innerHeight(); },
+        offset: function() { // offset will not only provide top & left, but also right & bottom
+            var offset = this.pre.offset(); 
+            
+            return $.extend(true, offset, {
+                bottom: this.height() + offset.top,
+                right: this.width() + offset.left
+            });
         }
     },
     sprites: {},
@@ -68,14 +72,14 @@ var Core = {
         Core.screen.sel.find("pre").empty().text(Game.Assets.bg[bg]);
         Core.current_bg = bg;
         
+        // get width of the widest line in the sprite
         var max_width = Game.Assets.bg[bg].split("\n").sort(function (a, b) { return b.length - a.length; })[0].length;
         
         $("#screen pre").css("width", max_width + "ch");
     },
     load_sprite: function(options) {
-        options = $.extend({
-            x: 50,
-            y: 50,
+        options = $.extend(true, {
+            id: options.sprite
         }, options);
         var sprite = Game.Assets.sprites[options.sprite];
         
@@ -84,32 +88,28 @@ var Core = {
                 $("<pre></pre>")
                 .text(sprite.normal)
             )
-            .css({
-                position: "absolute",
-                top: options.x + "px",
-                left: options.y + "px",
-            })
+            .attr("id", options.id)
             .addClass("sprites");
         
-        Core.screen.sel.append(div);
-        Core.sprites[options.sprite] = $.extend(proto_sprite, { sel: div }, sprite);
+        Core.screen.pre.prepend(div);
+        Core.sprites[options.id] = $.extend(true, { sel: div }, sprite, _sprite);
         
-        return Core.sprites[options.sprite];
+        return Core.sprites[options.id];
     }
 };
 
-var proto_sprite = {
-    sel: "",
-    normal: "",
-    blink: "",
-    center: function(animate, time) {
-        if (animate) {
-            this.sel.animate({
-                top: (Core.screen.height() - this.sel.outerHeight()) / 2 + "px",
-                left: (Core.screen.width() - this.sel.outerWidth()) / 2 + "px"
-            }, time || 1000)
-        }
-        return this;
+var _sprite = {
+    height: function() {
+        return this.sel.outerHeight();
+    },
+    width: function() {
+        return this.sel.outerWidth();
+    },
+    center: function() {
+        return {
+            top: (Core.screen.height() - this.height()) / 2 + "px",
+            left: (Core.screen.width() - this.width()) / 2 + "px"
+        };
     },
     blinkable: function() {
         sprite = this;
@@ -125,5 +125,46 @@ var proto_sprite = {
     clickable: function(callback) {
         this.sel.css("cursor", "pointer");
         this.sel.click(callback);
+    },
+    setPosition: function(args) {
+    // TODO cette fonction devrait plutot prendre des attributs
+    // css et les passer en vrac a jQuery
+        var options = $.extend(true, {
+            animate: false,
+            time: 1000,
+            css: {},
+            short: 0,
+            progress: function() {}
+        }, args);
+        
+        if (options.short != "") {
+            switch(options.short) {
+                case "centertop":
+                    $.extend(true, options.css, { top: 0, left: this.center.left() });
+                    break;
+                case "centerright":
+                    $.extend(true, options.css, { top: this.center().top, right: 0 });
+                    break;
+                case "centerbottom":
+                    $.extend(true, options.css, { bottom: 0, left: this.center.left() });
+                    break;
+                case "centerleft":
+                    $.extend(true, options.css, { top: this.center().top, left: 0 });
+                    break;
+                case "center":
+                    $.extend(true, options.css, { top: this.center().top, left: this.center().left });
+                    break;
+            };
+        }
+        
+        if (options.animate) {
+            this.sel.animate(options.css, {
+                duration: options.time,
+                progress: options.progress
+            });
+        } else {
+            this.sel.css(options.css, options.time)
+        }
+        return this;
     }
 }
