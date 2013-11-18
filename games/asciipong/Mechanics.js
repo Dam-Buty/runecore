@@ -35,7 +35,10 @@ var bind_paddle = function() {
 
 var animate_ball = function() {
     $.extend(true, Core.sprites.ball, {
-        animate: 
+        animation: {
+            angle: Math.random * 20 + 20,
+            destination: 
+        }
     }
 
     Core.sprites.ball.setPosition({
