@@ -92,7 +92,7 @@ var Core = {
             .addClass("sprites");
         
         Core.screen.pre.prepend(div);
-        Core.sprites[options.id] = $.extend(true, { sel: div }, sprite, _sprite);
+        Core.sprites[options.id] = $.extend(true, { sel: div, pre: div.find("pre") }, sprite, _sprite);
         
         return Core.sprites[options.id];
     }
@@ -125,6 +125,13 @@ var _sprite = {
     clickable: function(callback) {
         this.sel.css("cursor", "pointer");
         this.sel.click(callback);
+    },
+    rev: function() {
+        if (this.pre.css("direction") == "ltr") {
+            this.pre.css("direction", "rtl");
+        } else {
+            this.pre.css("direction", "ltr");
+        }
     },
     setPosition: function(args) {
     // TODO cette fonction devrait plutot prendre des attributs

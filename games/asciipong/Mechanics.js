@@ -34,9 +34,13 @@ var bind_paddle = function() {
 };
 
 var animate_ball = function() {
+    $.extend(true, Core.sprites.ball, {
+        animate: 
+    }
+
     Core.sprites.ball.setPosition({
         animate: true,
-        css: { left: 0, top: Math.random() * Core.screen.height() },
+        css: { left: Core.screen.offset().left + Core.screen.width(), top: Math.random() * Core.screen.height() },
         progress: function(animation) {
             // Collision detection
             console.log(animation);
@@ -44,6 +48,4 @@ var animate_ball = function() {
             
         }
     });
-    
-    
 };
