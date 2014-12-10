@@ -5,6 +5,8 @@ Side scroller classique, le joueur controle un vaisseau spatial et des vagues su
 
 Le pilote peut récolter les débris des ennemis tués. Avec les débris il peut construire des systèmes ou upgrader ses systèmes existants.
 
+Le joueur gagne une vie toutes les # minutes.
+
 # Vagues d'ennemis
 
 Chaque type d'ennemi a une population max **P**, un niveau minimum **n** et un niveau maximum **N**. Pour la vague **V**, et un type d'ennemi donné éligible, on va générer aléatoirement un score **S** entre 0 et 1.
@@ -15,7 +17,7 @@ Si n < V < N                     // Test d'éligibilité
         Spawn !
 ````
 
-Si on a un spawn de ce type d'ennemi, on calcule la population comme ça (distribution normale) :
+Si on a un spawn de ce type d'ennemi, on calcule la population comme ça (distribution normale, arrondi vers le bas) :
 
 ````
                1       (-S² / 2)
@@ -27,19 +29,34 @@ Une fois qu'on connait la population à spawner pour tous les types d'ennemis é
 
 Chaque ennemi a également des **HP** et va laisser entre **n** et **N** (distribution normale) débris.
 
-En autopilot, le vaisseau a une stratégie parfaite mais il ne va pas très vite. L'autopilot grinde les niveaux mais ne tue pas les bosses.
-Il gagne des vies toutes les # secondes.
-
 # Systèmes
 
-Le joueur commence avec seulement les armes
+Le joueur commence avec seulement l'autorepair. Il doit se jeter dans les ennemis pour acheter le canon.
+
+## Autorepair
+
+Les upgrades de l'autorepair ne sont disponibles qu'à un certain niveau d'autopilot.
 
 ## Canon
 
-Le canon commence à 
+Le canon commence à 4 dégats. Les upgrades :
+- Vitesse de tir
+- Dégats
+- Nombre de tirs (jusqu'à 3 à la Probotector)
+- Missiles additionnels
+
+## Aimant
+
+L'aimant sert à attirer les débris à soi. Les upgrades augmentent son rayon et son attraction.
+
+## Autopilot
+
+En autopilot, le vaisseau fait de son mieux pour tuer des méchants et récolter des débris, mais il ne va pas très vite. Il consomme les débris en possession du joueur, et quand il n'a plus de vies ou plus de débris il s'arrête. Il faut le redémarrer manuellement.
+
+Upgrades :
+- Vitesse de déplacement
+- Consommation de débris
+- Débloquer updates d'autorepair
 
 
 
-- Aimant
-- Autopilot
-- 
