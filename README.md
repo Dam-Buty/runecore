@@ -7,23 +7,25 @@ Le pilote peut récolter les débris des ennemis tués. Avec les débris il peut
 
 # Vagues d'ennemis
 
-Chaque type d'ennemi a une population max **P**, un niveau minimum **n** et un niveau maximum **N**. Pour la vague **V**, on va générer aléatoirement un score **S**.
+Chaque type d'ennemi a une population max **P**, un niveau minimum **n** et un niveau maximum **N**. Pour la vague **V**, et un type d'ennemi donné éligible, on va générer aléatoirement un score **S** entre 0 et 1.
 
 ````
-Si n < V < N
+Si n < V < N                     // Test d'éligibilité
     Si S < (V - n) / (N - n)
         Spawn !
 ````
 
-Si on a un spawn, la population est calculée comme ça (arrondi vers le bas) :
+Si on a un spawn de ce type d'ennemi, on calcule la population comme ça (distribution normale) :
 
 ````
-         1       (-S² / 2)
-  P * ( ---  *  e          )
-        √2π
+               1       (-S² / 2)
+  1 + ( P * ( ---  *  e          ) )
+              √2π
 ````
 
-Une fois qu'on connait la population à spawner pour tous les types d'ennemis éligibles, on met les méchants dans un tableau, on leur ajoute des delays aléatoires et BOUM!
+Une fois qu'on connait la population à spawner pour tous les types d'ennemis éligibles, on met les méchants dans un tableau, on leur ajoute des delays aléatoires, on mélange le tout et BOUM!
+
+Chaque ennemi a également des **HP** et va laisser entre **n** et **N** (distribution normale) débris.
 
 En autopilot, le vaisseau a une stratégie parfaite mais il ne va pas très vite. L'autopilot grinde les niveaux mais ne tue pas les bosses.
 Il gagne des vies toutes les # secondes.
